@@ -1,13 +1,9 @@
-This project represents a template for what a Netflix OSS project should look like. We're striving for a pure Gradle build, instead of taking a consolidated plugin approach, as we would internally. This will maintain each project's isolation and keep the build as transparent as possible to the outside world. While at the same time we want to be able to push out build updates in a predictable fashion. 
-
-There are three branches for which you should concern yourself with:
-* master - Template of a fully working multi-module project. It's a good starting place if you're starting from scratch.
-* multi-project - Just the build files for a multi-module project. 
-* single-project - Just the build files for a single module project.
-
-## Choosing a branch
-
-The goal is that projects will be able to "git merge build/branch" when changes are needed to be pushed out.  If you take the wrong branch and consequently heavily modify the files, the merge will be a pain. The other advantage of using an appropriate branch is to provide a level of consistency between the projects. The _master_ branch is best for new projects who want something working out of the gate, but after that you'd migrate to merging from the multi-project so that you don't get bad merges from the same java files. The _multi-project_ branch is for projects which have multiple modules that will be published together, e.g. client, common and server modules. Gradle is very good at building multiple projects, but it does require slightly different syntax and isolation from the rootProject, hence the separate project. The _single-project_ branch is the simplest build which is for a single project. All project use a Maven layout, e.g. src/main/java.
+This project represents a template for what a LifeWay API project should look
+like. We're striving for a common, consistent Gradle build, instead of each
+project using different wrapper versions and tool.  This will still maintain
+each project's isolation and keep the build as transparent as possible. While at
+the same time we want to be able to push out build updates in a predictable
+fashion.
 
 ## Features
 
@@ -70,12 +66,18 @@ Two targets available to use artifactoryi:
 
 ## Properties
 
-Gradle has a few ways to inject properties into the project, which can then be used in the DSL. It can done on the command line via the "_\-P_ option, e.g. _./gradlew -Pmyproperty=myvalue_". It can also be done via Java System Property as long as it's prefixed with ORG\_GRADLE\_PROJECT, e.g. <em>./gradlew -DORG\_GRADLE\_PROJECT\_myproperty=myvalue</em>. To avoid having to pass in some properties every time on the command line, they can be stored in <em>$HOME/.gradle/gradle.properties</em>. 
+Gradle has a few ways to inject properties into the project, which can then be used in the DSL.
+It can done on the command line via the "_\-P_ option,
 
-When publishing to Maven Central, we need a few "secrets" to sign the artifacts and to log into Sonatype. Most of these are handled by the [OSS Jenkins] page. If you had to release from your desktop, the best way to store these is to create this file in your home directory, with the appropriate values:
- 
-    signing.secretKeyRingFile = /Users/yourUserName/.gnupg/secring.gpg
-    signing.keyId = 740A1840
-    signing.password = youShouldSetThis
-    sonatypeUsername = jiraSonaTypeUser
-    sonatypePassword = CTheTrees
+e.g.
+
+    ./gradlew -Pmyproperty=myvalue_".
+
+It can also be done via Java System Property as long as it's prefixed with ORG\_GRADLE\_PROJECT,
+
+e.g.
+
+    ./gradlew -DORG\_GRADLE\_PROJECT\_myproperty=myvalue
+
+To avoid having to pass in some properties every time on the command line, they can
+be stored in <em>$HOME/.gradle/gradle.properties</em>.
