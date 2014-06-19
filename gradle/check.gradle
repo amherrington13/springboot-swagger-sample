@@ -1,8 +1,8 @@
-// Checkstyle
-apply plugin: 'checkstyle'
-checkstyle {
-    ignoreFailures = true 
-    configFile = rootProject.file('codequality/checkstyle.xml')
+// CodeNarc
+apply plugin: 'codenarc'
+codenarc {
+    ignoreFailures = true
+    codeNarcConfigFile = rootProject.file('codequality/codenarc.xml')
 }
 
 // FindBugs
@@ -15,10 +15,5 @@ findbugs {
 apply plugin: 'pmd'
 //tasks.withType(Pmd) { reports.html.enabled true }
 
-apply plugin: 'cobertura'
-cobertura {
-    sourceDirs = sourceSets.main.java.srcDirs
-    format = 'html'
-    includes = ['**/*.java', '**/*.groovy']
-    excludes = []
-}
+//JaCoCo
+apply plugin: 'jacoco'
