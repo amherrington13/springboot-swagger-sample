@@ -1,5 +1,6 @@
-// Establish version and status
+//Build for Groovy library project
 ext.githubProjectName = rootProject.name // Change if github project name is not the same as the root project's name
+ext.githubUserName = 'APIServices'  // Change to fit your GitHub User/Organization
 ext.artifactoryRepoKey =  project.version.endsWith('-SNAPSHOT')?'libs-snapshot-local':'libs-release-local'
 
 buildscript {
@@ -24,7 +25,7 @@ apply from: file('gradle/license.gradle')
 
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.1.6'
+    compile 'org.codehaus.groovy:groovy-all:2.1.8'
 
     // We use the awesome Spock testing and specification framework
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
