@@ -51,7 +51,7 @@ task jacocoCheck (dependsOn: tasks.jacocoTestReport){
 				"\n Target branch coverage: " + new DecimalFormat("#.##").format(minBranchCoverageNum) + "%" +
 				" ... achieved: " + new DecimalFormat("#.##").format(branchPct) + "%" +
 				"\n For complete report see: " +
-				"\n ./build/reports/cobertura/index.html"
+				"\n ./build/reports/jacoco/test/html/index.html"
 			throw new RuntimeException(errorMsg)
 		}
 
