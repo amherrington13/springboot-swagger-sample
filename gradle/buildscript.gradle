@@ -2,6 +2,7 @@
 repositories {
     maven {url 'http://artifactory/remote-repos'}
     maven {url 'http://repo.jfrog.org/artifactory/gradle-plugins'}
+    maven {url 'http://dl.bintray.com/content/netflixoss/external-gradle-plugins/'}
 }
 
 dependencies {

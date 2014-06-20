@@ -2,7 +2,7 @@
 apply plugin: 'codenarc'
 codenarc {
     ignoreFailures = true
-    codeNarcConfigFile = rootProject.file('codequality/codenarc.xml')
+    configFile = rootProject.file('codequality/codenarc.xml')
 }
 
 // FindBugs
@@ -17,3 +17,7 @@ apply plugin: 'pmd'
 
 //JaCoCo
 apply plugin: 'jacoco'
+
+afterEvaluate {
+	check.dependsOn jacocoTestReport
+}
