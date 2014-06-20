@@ -13,7 +13,7 @@ status = project.hasProperty('preferredStatus')?project.preferredStatus:(version
         extension 'jar'
     }
 
-    task javadocJar(type: Jar, dependsOn:javadoc) {
+    task javadocJar(type: Jar, dependsOn:groovydoc) {
         from javadoc.destinationDir
         classifier 'javadoc'
         extension 'jar'
@@ -62,7 +62,7 @@ def docTasks = [:]
 }
 
 githubPages {
-    repoUri = "git@github.lifeway.org:APIServices/${rootProject.githubProjectName}.git"
+    repoUri = "git@github.lifeway.org:${rootProject.githubUserName}/${rootProject.githubProjectName}.git"
     pages {
         docTasks.each { shortName, docTask ->
             from(docTask.outputs.files) {

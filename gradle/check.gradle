@@ -13,10 +13,6 @@ findbugs {
     ignoreFailures = true
 }
 
-// PMD
-apply plugin: 'pmd'
-//tasks.withType(Pmd) { reports.html.enabled true }
-
 //JaCoCo
 apply plugin: 'jacoco'
 
