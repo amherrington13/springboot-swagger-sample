@@ -1,5 +1,6 @@
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
+apply plugin: 'war'
 
 sourceCompatibility = 1.7
 
@@ -54,7 +55,7 @@ status = project.hasProperty('preferredStatus')?project.preferredStatus:(version
 apply plugin: 'github-pages' // Used to create publishGhPages task
 
 def docTasks = [:]
-[Javadoc,ScalaDoc,Groovydoc].each{ Class docClass ->
+[Javadoc,Groovydoc].each{ Class docClass ->
     tasks.withType(docClass).each { docTask ->
         docTasks[docTask.name] = docTask
         processGhPages.dependsOn(docTask)
