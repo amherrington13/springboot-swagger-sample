@@ -68,8 +68,8 @@ war.doLast {
 task tomcat(type: Copy, dependsOn: build) {
 	from 'build/libs'
 	into '/opt/tomcat/webapps'
-	// Use a closure to map the file name
-	rename { String fileName ->
-		fileName.replace("$war.archiveName", "$ext.apiVersion#$ext.apiResource.war")
-	}
+  include '*.war'
+  rename { filename ->
+    filename.replace war.archiveName, "v$apiVersion#${apiResource}.war"
+  }
 }
