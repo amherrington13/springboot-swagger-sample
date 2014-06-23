@@ -2,6 +2,8 @@
 ext.githubProjectName = rootProject.name // Change if github project name is not the same as the root project's name
 ext.githubUserName = 'APIServices'  // Change to fit your GitHub User/Organization
 ext.artifactoryRepoKey =  project.version.endsWith('-SNAPSHOT')?'libs-snapshot-local':'libs-release-local'
+ext.apiVersion = 1
+ext.apiResource = 'resource'  //CHANGEME (e.g. users) the is the REST resource
 
 buildscript {
     repositories {
@@ -27,7 +29,47 @@ apply from: file('gradle/license.gradle')
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.1.8'
 
-    // We use the awesome Spock testing and specification framework
-    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
-    testCompile 'junit:junit:4.11'
+  //Jersey
+	compile 'javax.ws.rs:jsr311-api:1.1.1'
+	compile 'com.sun.jersey:jersey-core:1.9'
+	compile 'com.sun.jersey:jersey-server:1.9'
+	compile 'com.sun.jersey:jersey-client:1.9'
+	compile 'com.sun.jersey:jersey-json:1.9'
+	compile 'com.sun.jersey.contribs:jersey-spring:1.9'
+	//Lifeway
+	compile 'lifeway-soa:HealthCheckService:1.0.1'
+	compile 'lifeway-soa:VersionService:1.0.1'
+
+  //********** PUT Project specific dependencies here **********
+
+
+  // We use the awesome Spock testing and specification framework
+  testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+  testCompile 'junit:junit:4.11'
+}
+
+war {
+	from('src/main/resources/') {
+		include '*.xml'
+		into('WEB-INF')
+	}
+
+	from('build/generated') {
+		include '*.properties'
+		into('WEB-INF/classes')
+	}
+}
+
+war.doLast {
+	println "Exploding WAR!!!! BOOM!"
+	ant.unzip(src: war.archivePath, dest: "$buildDir/web")
+}
+
+task tomcat(type: Copy, dependsOn: build) {
+	from 'build/libs'
+	into '/opt/tomcat/webapps'
+	// Use a closure to map the file name
+	rename { String fileName ->
+		fileName.replace("$war.archiveName", "$ext.apiVersion#$ext.apiResource.war")
+	}
 }
