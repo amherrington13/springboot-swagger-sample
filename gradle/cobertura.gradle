@@ -9,6 +9,7 @@ cobertura {
 	cobertura.coverageIgnoreTrivial
 	coverageFormats = ['xml', 'html']
 	coverageExcludes = ['.*\\$\\d.java']
+	coverageSourceDirs = sourceSets.main.java.srcDirs + sourceSets.main.groovy.srcDirs
 }
 
 task coberturaCheck (dependsOn: tasks.cobertura){

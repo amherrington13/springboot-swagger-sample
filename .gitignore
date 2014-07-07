@@ -18,7 +18,8 @@
 *.dmg
 *.gz
 *.iso
-*.jar
+*.jar               #Exclude jars
+!gradle-wrapper.jar #Except for gradle-wrapper.jar
 *.rar
 *.tar
 *.zip
