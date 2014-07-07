@@ -22,20 +22,25 @@ repositories {
 apply from: file('gradle/convention.gradle')
 apply from: file('gradle/artifactory.gradle')
 apply from: file('gradle/check.gradle')
+
+//## Choose which coverage checker you wish to use
+//apply from: file('gradle/jacoco.gradle')
+apply from: file('gradle/cobertura.gradle')
+
 apply from: file('gradle/license.gradle')
 //apply from: file('gradle/release.gradle')
 
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.1.8'
+  compile "org.codehaus.groovy:groovy-all:$groovyVersion"
 
   //Jersey
 	compile 'javax.ws.rs:jsr311-api:1.1.1'
-	compile 'com.sun.jersey:jersey-core:1.9'
-	compile 'com.sun.jersey:jersey-server:1.9'
-	compile 'com.sun.jersey:jersey-client:1.9'
-	compile 'com.sun.jersey:jersey-json:1.9'
-	compile 'com.sun.jersey.contribs:jersey-spring:1.9'
+	compile "com.sun.jersey:jersey-core:$jerseyVersion"
+	compile "com.sun.jersey:jersey-server:$jerseyVersion"
+	compile "com.sun.jersey:jersey-client:$jerseyVersion"
+	compile "com.sun.jersey:jersey-json:$jerseyVersion"
+	compile "com.sun.jersey.contribs:jersey-spring:$jerseyVersion"
 	//Lifeway
 	compile 'lifeway-soa:HealthCheckService:1.0.1'
 	compile 'lifeway-soa:VersionService:1.0.1'
