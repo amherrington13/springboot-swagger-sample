@@ -1,0 +1,23 @@
+import java.text.SimpleDateFormat
+
+afterEvaluate {
+    //war plugin is required
+    if(!project.plugins.hasPlugin('war')){
+        apply plugin: 'war'
+    }
+}
+
+task createVersion  {
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
+    String version="versionMesssage=<BuildInformation><buildProject>${project.name}</buildProject><buildVersion>${version}</buildVersion><buildTime>${sdf.format(new Date())}</buildTime></BuildInformation>"
+
+    ext.generatedDir = new File(buildDir, 'generated')
+    outputs.dir generatedDir
+    doLast {
+        println 'Creating version.properties'
+        generatedDir.mkdirs()
+        new File("$generatedDir/version.properties").write(version)
+    }
+}
+
+war.dependsOn createVersion
