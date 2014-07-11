@@ -63,10 +63,6 @@ def docTasks = [:]
     }
 }
 
-task createSourceDirs << {
-  sourceSets.all { set -> set.allSource.srcDirs.each{it.mkdirs() } }
-}
-
 githubPages {
     repoUri = "git@github.lifeway.org:${rootProject.githubUserName}/${rootProject.githubProjectName}.git"
     pages {

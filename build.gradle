@@ -22,6 +22,7 @@ repositories {
 apply from: file('gradle/convention.gradle')
 apply from: file('gradle/artifactory.gradle')
 apply from: file('gradle/check.gradle')
+apply from: file('gradle/integration-test.gradle')
 
 //## Choose which coverage checker you wish to use
 //apply from: file('gradle/jacoco.gradle')
@@ -52,6 +53,10 @@ dependencies {
   // We use the awesome Spock testing and specification framework
   testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
   testCompile 'junit:junit:4.11'
+}
+
+task createSourceDirs << {
+  sourceSets.all { set -> set.allSource.srcDirs.each{it.mkdirs() } }
 }
 
 war {
