@@ -19,6 +19,11 @@ status = project.hasProperty('preferredStatus')?project.preferredStatus:(version
         classifier 'javadoc'
         extension 'jar'
     }
+    
+    configurations.all {
+		resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+		resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+	}
 
     configurations.create('sources')
     configurations.create('javadoc')
