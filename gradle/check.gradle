@@ -8,7 +8,7 @@ codenarc {
 }
 
 // FindBugs
-apply plugin: 'findbugs'
-findbugs {
-    ignoreFailures = true
-}
+//apply plugin: 'findbugs'
+//findbugs {
+//    ignoreFailures = true
+//}
