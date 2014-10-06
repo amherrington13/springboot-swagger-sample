@@ -1,12 +1,5 @@
 import java.text.SimpleDateFormat
 
-afterEvaluate {
-    //war plugin is required
-    if(!project.plugins.hasPlugin('war')){
-        apply plugin: 'war'
-    }
-}
-
 task createVersion  {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
     String version="versionMesssage=<BuildInformation><buildProject>${project.name}</buildProject><buildVersion>${version}</buildVersion><buildTime>${sdf.format(new Date())}</buildTime></BuildInformation>"
@@ -20,4 +13,10 @@ task createVersion  {
     }
 }
 
-war.dependsOn createVersion
+jar {
+	from('build/generated') {
+		include '*.properties'
+	}
+}
+
+jar.dependsOn createVersion

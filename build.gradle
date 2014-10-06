@@ -29,23 +29,24 @@ apply from: file('gradle/integration-test.gradle')
 apply from: file('gradle/cobertura.gradle')
 
 apply from: file('gradle/version.gradle')
-//apply from: file('gradle/release.gradle')
+
 
 
 
 dependencies {
   compile "org.codehaus.groovy:groovy-all:$groovyVersion"
 
-  //Jersey
-	compile 'javax.ws.rs:jsr311-api:1.1.1'
-	compile "com.sun.jersey:jersey-core:$jerseyVersion"
-	compile "com.sun.jersey:jersey-server:$jerseyVersion"
-	compile "com.sun.jersey:jersey-client:$jerseyVersion"
-	compile "com.sun.jersey:jersey-json:$jerseyVersion"
-	compile "com.sun.jersey.contribs:jersey-spring:$jerseyVersion"
-	//Lifeway
-	compile 'lifeway-soa:HealthCheckService:1.0.1'
-	compile 'lifeway-soa:VersionService:1.0.1'
+  //Lifeway
+  compile 'lifeway-soa:VersionService:1.0.1'
+
+  //Apache
+  compile 'org.apache.httpcomponents:httpclient:4.3.5'
+
+  //Spring Boot
+  compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+	compile "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+	compile "org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion"
+	compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
 
   //********** PUT Project specific dependencies here **********
 
@@ -53,6 +54,7 @@ dependencies {
   // We use the awesome Spock testing and specification framework
   testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
   testCompile 'junit:junit:4.11'
+	testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 }
 
 task createSourceDirs << {
@@ -84,3 +86,15 @@ task tomcat(type: Copy, dependsOn: build) {
     filename.replace war.archiveName, "v$apiVersion#${apiResource}.war"
   }
 }
+
+task createRunJarScript << {
+  def cr = System.getProperty('line.separator')
+  File scriptsDir = new File(buildDir, 'scripts')
+  scriptsDir.mkdirs()
+  File file = new File("$buildDir/scripts/runjar.sh") //.createNewFile()
+  file.withWriter('UTF-8') { writer ->
+      writer.write("#!/usr/bin/env bash $cr")
+      writer.write("java -jar ${jar.archivePath} --spring.config.location=/opt/conf/${project.name}.properties -Djava.io.tmpdir=/opt/logs $cr")
+    }
+}
+build.dependsOn createRunJarScript
