@@ -5,6 +5,18 @@ configurations{
 	published
 }
 
+install {
+    repositories.mavenInstaller {
+        pom.project {
+          parent {
+            groupId 'org.springframework.boot'
+            artifactId 'spring-boot-starter-parent'
+            version "$springBootVersion"
+          }
+        }
+    }
+}
+
 artifactory {
 	contextUrl = 'http://artifactory.lifeway.org'
 

@@ -1,4 +1,5 @@
 apply plugin: 'groovy'
+apply plugin: 'spring-boot'
 apply plugin: 'eclipse'
 apply plugin: 'war'
 
@@ -19,7 +20,7 @@ status = project.hasProperty('preferredStatus')?project.preferredStatus:(version
         classifier 'javadoc'
         extension 'jar'
     }
-    
+
     configurations.all {
 		resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 		resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
