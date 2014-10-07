@@ -65,23 +65,6 @@ task createSourceDirs << {
   sourceSets.all { set -> set.allSource.srcDirs.each{it.mkdirs() } }
 }
 
-war {
-	from('src/main/resources/') {
-		include '*.xml'
-		into('WEB-INF')
-	}
-
-	from('build/generated') {
-		include '*.properties'
-		into('WEB-INF/classes')
-	}
-}
-
-war.doLast {
-	println "Exploding WAR!!!! BOOM!"
-	ant.unzip(src: war.archivePath, dest: "$buildDir/web")
-}
-
 task tomcat(type: Copy, dependsOn: build) {
 	from 'build/libs'
 	into '/opt/tomcat/webapps'
@@ -100,5 +83,6 @@ task createRunJarScript << {
       writer.write("#!/usr/bin/env bash $cr")
       writer.write("java -jar ${jar.archivePath} --spring.config.location=/opt/conf/${project.name}.properties $cr")
     }
+    file.setExecutable(true)
 }
 build.dependsOn createRunJarScript
