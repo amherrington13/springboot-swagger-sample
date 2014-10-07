@@ -98,7 +98,7 @@ task createRunJarScript << {
   File file = new File("$buildDir/scripts/runjar.sh") //.createNewFile()
   file.withWriter('UTF-8') { writer ->
       writer.write("#!/usr/bin/env bash $cr")
-      writer.write("java -jar ${jar.archivePath} --spring.config.location=/opt/conf/${project.name}.properties -Djava.io.tmpdir=/opt/logs $cr")
+      writer.write("java -jar ${jar.archivePath} --spring.config.location=/opt/conf/${project.name}.properties $cr")
     }
 }
 build.dependsOn createRunJarScript
