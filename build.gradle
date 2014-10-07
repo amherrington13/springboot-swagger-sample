@@ -11,6 +11,10 @@ buildscript {
 	    maven { url 'http://artifactory/libs-snapshot'}
     }
     apply from: file('gradle/buildscript.gradle'), to: buildscript
+    //This needs to go here because of the springBootVersion property
+    dependencies {
+      classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+    }
 }
 
 
@@ -54,7 +58,7 @@ dependencies {
   // We use the awesome Spock testing and specification framework
   testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
   testCompile 'junit:junit:4.11'
-	testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+	testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
 }
 
 task createSourceDirs << {
