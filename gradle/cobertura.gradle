@@ -17,6 +17,22 @@ task coberturaCheck (dependsOn: tasks.cobertura){
 		def coverageReport = new File("$buildDir/reports/cobertura/coverage.xml" )
 		assert coverageReport.exists()
 		assert coverageReport.canRead()
+		assert coverageReport.canWrite()
+
+		//use local dtd since sourceforge is down requently
+		def newText = ""
+		coverageReport.eachLine { currentLine, lineNumber ->
+					if (lineNumber == 2) {
+							currentLine = "<!DOCTYPE coverage SYSTEM \"../../../gradle/coverage-04.dtd\">"
+					println currentLine
+					}
+					newText += currentLine+'\n'
+			}
+		coverageReport.write(newText)
+
+
+
+
 		def coverage = new XmlParser().parse("$buildDir/reports/cobertura/coverage.xml")
 		def df = new DecimalFormat("#.##")
 		def lineCoverageRate = coverage.attribute("line-rate")
