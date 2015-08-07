@@ -2,7 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'spring-boot'
 apply plugin: 'eclipse'
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 
 // GRADLE-2087 workaround, perform after java plugin
 status = project.hasProperty('preferredStatus')?project.preferredStatus:(version.contains('SNAPSHOT')?'snapshot':'release')
@@ -66,6 +66,15 @@ def docTasks = [:]
         docTasks[docTask.name] = docTask
         processGhPages.dependsOn(docTask)
     }
+}
+
+task checkForSnapshotDependencies << {
+	allprojects { project ->
+	 project.configurations.runtime.each {
+	  if (it.toString().contains("-SNAPSHOT"))
+	   throw new StopActionException("Release build contains snapshot dependencies: " + it)
+	 }
+	}
 }
 
 githubPages {
