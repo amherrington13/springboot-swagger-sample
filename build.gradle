@@ -86,3 +86,12 @@ task createRunJarScript << {
     file.setExecutable(true)
 }
 build.dependsOn createRunJarScript
+
+task addBuildNumberToVersionString << {
+	def buildNumber = System.getProperty('BUILD_NUMBER')
+	if(buildNumber){
+		project.version = "$version-b$buildNumber"
+	}
+}
+
+jar.dependsOn addBuildNumberToVersionString
