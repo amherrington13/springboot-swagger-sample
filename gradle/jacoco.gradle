@@ -1,5 +1,12 @@
+import java.math.MathContext
+import java.text.DecimalFormat
+
 //JaCoCo
 apply plugin: 'jacoco'
+
+jacoco {
+	toolVersion = "0.7.4.201502262128"
+}
 
 task jacocoCheck (dependsOn: tasks.jacocoTestReport){
   doLast{
