@@ -3,10 +3,10 @@
 // Add integration test source sets
 sourceSets {
   integrationTest { sourceSet ->
-    ["java", "groovy", "scala", "resources"].each {
-      if (!sourceSet.hasProperty(it)) return
-      sourceSet."$it".srcDir file("src/integtest/${it}")
-    }
+	["java", "groovy", "scala", "resources"].each {
+	  if (!sourceSet.hasProperty(it)) return
+	  sourceSet."$it".srcDir file("src/integtest/${it}")
+	}
   }
 }
 

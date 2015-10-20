@@ -58,13 +58,10 @@ status = project.hasProperty('preferredStatus')?project.preferredStatus:(version
         eclipse.classpath.plusConfigurations += project.configurations.provided
     }
 
-apply plugin: 'github-pages' // Used to create publishGhPages task
-
 def docTasks = [:]
 [Javadoc,Groovydoc].each{ Class docClass ->
     tasks.withType(docClass).each { docTask ->
         docTasks[docTask.name] = docTask
-        processGhPages.dependsOn(docTask)
     }
 }
 
@@ -77,18 +74,7 @@ task checkForSnapshotDependencies << {
 	}
 }
 
-githubPages {
-    repoUri = "git@github.lifeway.org:${rootProject.githubUserName}/${rootProject.githubProjectName}.git"
-    pages {
-        docTasks.each { shortName, docTask ->
-            from(docTask.outputs.files) {
-                into "docs/${shortName}"
-            }
-        }
-    }
-}
-
 // Generate wrapper, which is distributed as part of source to alleviate the need of installing gradle
 task createWrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.7'
 }

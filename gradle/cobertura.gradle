@@ -2,7 +2,7 @@ import java.math.MathContext
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
-apply plugin: 'cobertura'
+apply plugin: 'net.saliman.cobertura'
 
 
 cobertura {
@@ -12,7 +12,7 @@ cobertura {
 	coverageSourceDirs = sourceSets.main.java.srcDirs + sourceSets.main.groovy.srcDirs
 }
 
-task coberturaCheck (dependsOn: tasks.cobertura){
+task coberturaDetail (dependsOn: coberturaReport){
 	doLast{
 		def coverageReport = new File("$buildDir/reports/cobertura/coverage.xml" )
 		assert coverageReport.exists()
@@ -23,16 +23,16 @@ task coberturaCheck (dependsOn: tasks.cobertura){
 		def newText = ""
 		coverageReport.eachLine { currentLine, lineNumber ->
 					if (lineNumber == 2) {
-							currentLine = "<!DOCTYPE coverage SYSTEM \"../../../gradle/coverage-04.dtd\">"
+//							currentLine = "<!DOCTYPE coverage SYSTEM \"../../../gradle/coverage-04.dtd\">"
+						currentLine = ""
 					}
 					newText += currentLine+'\n'
 			}
 		coverageReport.write(newText)
 
+		Reader streamReader = new InputStreamReader(new FileInputStream("$buildDir/reports/cobertura/coverage.xml"), "UTF-8")
+		def coverage = new XmlParser(false, true, true).parse(streamReader)
 
-
-
-		def coverage = new XmlParser().parse("$buildDir/reports/cobertura/coverage.xml")
 		def df = new DecimalFormat("#.##")
 		def lineCoverageRate = coverage.attribute("line-rate")
 		def branchCoverageRate = coverage.attribute("branch-rate")
@@ -53,9 +53,9 @@ task coberturaCheck (dependsOn: tasks.cobertura){
 
 		println "*** Test coverage Success! ***\nTotal line coverage: " + df.format(lineCoverageNum) + "%\nTotal branch coverage: " + df.format(branchCoverageNum) + "%"
 	}
-	coberturaCheck.mustRunAfter coberturaReport
+	coberturaDetail.mustRunAfter coberturaReport
 }
 
 afterEvaluate {
-	check.dependsOn coberturaCheck
+	check.finalizedBy(project.tasks.coberturaDetail)
 }

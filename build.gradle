@@ -1,7 +1,6 @@
 //Build for Groovy library project
 ext.githubProjectName = rootProject.name // Change if github project name is not the same as the root project's name
 ext.githubUserName = 'APIServices'  // Change to fit your GitHub User/Organization
-ext.artifactoryRepoKey =  project.version.endsWith('-SNAPSHOT')?'libs-snapshot-local':'libs-release-local'
 ext.apiVersion = 1
 ext.apiResource = 'resource'  //CHANGEME (e.g. users) the is the REST resource
 
@@ -24,8 +23,6 @@ repositories {
 }
 
 apply from: file('gradle/convention.gradle')
-apply from: file('gradle/artifactory.gradle')
-apply from: file('gradle/check.gradle')
 apply from: file('gradle/integration-test.gradle')
 
 //## Choose which coverage checker you wish to use
