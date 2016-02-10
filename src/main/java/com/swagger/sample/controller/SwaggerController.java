@@ -15,7 +15,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
 public class SwaggerController {
 	
  
-    @RequestMapping(value="getWelcomeMessage", method = RequestMethod.GET)
+    @RequestMapping(value="welcomeMessage", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get Swagger welcome message", notes = "This is for any notes about the end point.")
     @ApiResponses(value = { 
@@ -24,7 +24,7 @@ public class SwaggerController {
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Failure")}) 
-    public String createLandLord() {
+    public String getMessage() {
         return "Welcome to this sample Swagger app!";
     }
  
