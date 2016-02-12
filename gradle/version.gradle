@@ -1,0 +1,25 @@
+import java.text.SimpleDateFormat
+
+task createVersion  {
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
+    def buildNumber = System.getenv().BUILD_NUMBER?.toInteger()
+    String version="versionMesssage=<BuildInformation><buildProject>${project.name}</buildProject><buildVersion>${version.minus('-SNAPSHOT')}</buildVersion>" +
+				   "<buildNumber>$buildNumber</buildNumber><buildURL>http://artifactory.lifeway.org/api/build/${project.name}/$buildNumber</buildURL>" +
+				   "<buildTime>${sdf.format(new Date())}</buildTime></BuildInformation>"
+
+    ext.generatedDir = new File(buildDir, 'generated')
+    outputs.dir generatedDir
+    doLast {
+        println 'Creating version.properties'
+        generatedDir.mkdirs()
+        new File("$generatedDir/version.properties").write(version)
+    }
+}
+
+jar {
+	from('build/generated') {
+		include '*.properties'
+	}
+}
+
+jar.dependsOn createVersion

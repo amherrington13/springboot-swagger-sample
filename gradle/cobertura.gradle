@@ -1,0 +1,61 @@
+import java.math.MathContext
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+
+apply plugin: 'net.saliman.cobertura'
+
+
+cobertura {
+	cobertura.coverageIgnoreTrivial
+	coverageFormats = ['xml', 'html']
+	coverageExcludes = ['.*\\$\\d.java']
+	coverageSourceDirs = sourceSets.main.java.srcDirs + sourceSets.main.groovy.srcDirs
+}
+
+task coberturaDetail (dependsOn: coberturaReport){
+	doLast{
+		def coverageReport = new File("$buildDir/reports/cobertura/coverage.xml" )
+		assert coverageReport.exists()
+		assert coverageReport.canRead()
+		assert coverageReport.canWrite()
+
+		//use local dtd since sourceforge is down requently
+		def newText = ""
+		coverageReport.eachLine { currentLine, lineNumber ->
+					if (lineNumber == 2) {
+//							currentLine = "<!DOCTYPE coverage SYSTEM \"../../../gradle/coverage-04.dtd\">"
+						currentLine = ""
+					}
+					newText += currentLine+'\n'
+			}
+		coverageReport.write(newText)
+
+		Reader streamReader = new InputStreamReader(new FileInputStream("$buildDir/reports/cobertura/coverage.xml"), "UTF-8")
+		def coverage = new XmlParser(false, true, true).parse(streamReader)
+
+		def df = new DecimalFormat("#.##")
+		def lineCoverageRate = coverage.attribute("line-rate")
+		def branchCoverageRate = coverage.attribute("branch-rate")
+		def minLineCoverageNum = new BigDecimal(minLineCoverage) //.round(new MathContext(3))
+		def minBranchCoverageNum = new BigDecimal(minBranchCoverage) //.round(new MathContext(3))
+		def lineCoverageNum = new BigDecimal(lineCoverageRate) * 100 //.round(new MathContext(3))
+		def branchCoverageNum = new BigDecimal(branchCoverageRate) *100 //.round(new MathContext(3))
+		if( lineCoverageNum < minLineCoverageNum || branchCoverageNum < minBranchCoverageNum) {
+			def errorMsg = "*** Test coverage insufficient ***" +
+				"\n Target line coverage: " + new DecimalFormat("#.##").format(minLineCoverageNum) + "%" +
+				" ... achieved: " + new DecimalFormat("#.##").format(lineCoverageNum) + "%" +
+				"\n Target branch coverage: " + new DecimalFormat("#.##").format(minBranchCoverageNum) + "%" +
+				" ... achieved: " + new DecimalFormat("#.##").format(branchCoverageNum) + "%" +
+				"\n For complete report see: " +
+				"\n ./build/reports/cobertura/index.html"
+			throw new RuntimeException(errorMsg)
+		}
+
+		println "*** Test coverage Success! ***\nTotal line coverage: " + df.format(lineCoverageNum) + "%\nTotal branch coverage: " + df.format(branchCoverageNum) + "%"
+	}
+	coberturaDetail.mustRunAfter coberturaReport
+}
+
+afterEvaluate {
+	check.finalizedBy(project.tasks.coberturaDetail)
+}

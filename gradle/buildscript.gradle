@@ -1,0 +1,10 @@
+// Executed in context of buildscript
+repositories {
+    maven {url 'http://artifactory/remote-repos'}
+    maven {url 'http://repo.jfrog.org/artifactory/gradle-plugins'}
+}
+
+dependencies {
+    classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.4'
+    classpath 'net.saliman:gradle-cobertura-plugin:2.2.7'
+}

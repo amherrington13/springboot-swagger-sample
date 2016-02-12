@@ -1,0 +1,94 @@
+//Build for Groovy library project
+ext.githubProjectName = rootProject.name // Change if github project name is not the same as the root project's name
+ext.githubUserName = 'APIServices'  // Change to fit your GitHub User/Organization
+ext.apiVersion = 1
+ext.apiResource = 'resource'  //CHANGEME (e.g. users) the is the REST resource
+
+buildscript {
+    repositories {
+	    maven { url 'http://artifactory/libs-release'}
+	    maven { url 'http://artifactory/libs-snapshot'}
+    }
+    apply from: file('gradle/buildscript.gradle'), to: buildscript
+    //This needs to go here because of the springBootVersion property
+    dependencies {
+      classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+    }
+}
+
+
+repositories {
+  maven { url 'http://artifactory/libs-release'}
+  maven { url 'http://artifactory/libs-snapshot'}
+}
+
+apply from: file('gradle/convention.gradle')
+apply from: file('gradle/integration-test.gradle')
+
+//## Choose which coverage checker you wish to use
+//apply from: file('gradle/jacoco.gradle')
+apply from: file('gradle/cobertura.gradle')
+
+apply from: file('gradle/version.gradle')
+
+
+
+
+dependencies {
+  compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+
+  //Lifeway
+  compile 'lifeway-soa:VersionService:1.0.1'
+
+  //Apache
+  compile 'org.apache.httpcomponents:httpclient:4.3.5'
+
+  //Spring Boot
+  compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+	compile "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+	compile "org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion"
+	compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+
+  //********** PUT Project specific dependencies here **********
+
+
+  // We use the awesome Spock testing and specification framework
+  testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+  testCompile 'junit:junit:4.11'
+	testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+}
+
+task createSourceDirs << {
+  sourceSets.all { set -> set.allSource.srcDirs.each{it.mkdirs() } }
+}
+
+task tomcat(type: Copy, dependsOn: build) {
+	from 'build/libs'
+	into '/opt/tomcat/webapps'
+  include '*.war'
+  rename { filename ->
+    filename.replace war.archiveName, "v$apiVersion#${apiResource}.war"
+  }
+}
+
+task createRunJarScript << {
+  def cr = System.getProperty('line.separator')
+  File scriptsDir = new File(buildDir, 'scripts')
+  scriptsDir.mkdirs()
+  File file = new File("$buildDir/scripts/runjar.sh") //.createNewFile()
+  file.withWriter('UTF-8') { writer ->
+      writer.write("#!/usr/bin/env bash $cr")
+      writer.write("java -jar ${jar.archivePath} --spring.config.location=/opt/conf/${project.name}.properties $cr")
+    }
+    file.setExecutable(true)
+}
+build.dependsOn createRunJarScript
+
+task addBuildNumberToVersionString << {
+	def buildNumber = System.getProperty('BUILD_NUMBER')
+	if(buildNumber){
+		project.version = "$version-b$buildNumber"
+	}
+}
+
+jar.dependsOn addBuildNumberToVersionString

@@ -1,0 +1,14 @@
+import java.text.DecimalFormat
+
+// CodeNarc
+apply plugin: 'codenarc'
+codenarc {
+    ignoreFailures = true
+    configFile = rootProject.file('codequality/codenarc.xml')
+}
+
+// FindBugs
+//apply plugin: 'findbugs'
+//findbugs {
+//    ignoreFailures = true
+//}
