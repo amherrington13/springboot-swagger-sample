@@ -1,2 +1,1 @@
-//UNCOMMENT AND ADD PROJECT NAME
-//rootProject.name = 'TheProjectName'
+rootProject.name = 'springboot-swagger-sample'
